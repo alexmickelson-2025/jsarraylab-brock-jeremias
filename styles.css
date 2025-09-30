@@ -4,6 +4,7 @@
   --border-radius: 2em;
   font-family: "Kanit", sans-serif;
 }
+
 body {
   display: flex;
   min-height: 100vh;
@@ -43,15 +44,18 @@ footer li {
 }
 
 #page-container {
-  display: flex; /* my children will obey flex rules */
-  flex-direction: row; /* my children will be laid out horizontally */
+  display: flex;
+  /* my children will obey flex rules */
+  flex-direction: row;
+  /* my children will be laid out horizontally */
   flex: 1;
 }
 
 .main-container {
   display: flex;
   flex-direction: column;
-  flex: 1; /*As a child of another flex parent, I will grow.*/
+  flex: 1;
+  /*As a child of another flex parent, I will grow.*/
 }
 
 h1 {
@@ -92,5 +96,21 @@ h1 {
   padding: 1em;
 }
 
-
 /* Write mobile css here */
+@media(max-width: 600px) {
+  #page-container{
+    display: flex;
+    flex-direction: column;
+  }
+  #page-container nav{
+    width: 100%;
+  }
+  #page-container ul
+  {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+    justify-content: center;
+    list-style: none;
+  }
+}

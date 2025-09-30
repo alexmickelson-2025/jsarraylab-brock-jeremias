@@ -45,9 +45,10 @@ function buildLeftNav() {
   return `<nav><ul><li>Home</li><li>Page 1</li><li>Page 2</li></ul></nav>`;
 }
 
-function buildMain() {
+function buildMain(cards) {
+  if (cards === undefined) return "";
   let output = "";
-  animals.forEach((entry) => {
+  cards.forEach((entry) => {
     output += buildAnimalCard(entry);
   });
 
@@ -62,9 +63,9 @@ function buildAnimalCard(entry) {
   return `<div class="card"><img src="${entry.imageLocation}" alt="${entry.alt}"/> <div class="card-text"> <h3>${entry.title}</h3><p>${entry.description}</p></div></div>`;
 }
 
-const buildSiteLayout = () => {
+const buildSiteLayout = (cards) => {
   const header = buildHeader();
-  const body = buildMain();
+  const body = buildMain(cards);
   const footer = buildFooter();
   return `${header}${body}${footer}`;
 };
@@ -77,21 +78,50 @@ const error = (message) => {
   return `${header}<section class="main-container"><main>${message}</main></section>${footer}`;
 };
 
+function getQueries() {
+  const query = window.location.search;
+  const pairs = query.replace("?", "").split("&");
+  return pairs.reduce((values, currentEntry) => {
+    const seperated = currentEntry.split("=");
+    const key = seperated[0];
+    const val = seperated[1];
+    return { ...values, [key]: val };
+  }, {})
+}
+
 const queryString = window.location.search;
 // const query = queryString.split("&")[0].split("=")[1]
-const query = queryString.split("&").map((x) => parseInt(x.split("=")[1]));
-const queryCount = queryString.split("&").map((x) => parseInt(x.split("=")[1]));
-console.log(query);
+// const query = queryString.split("&").map((x) => parseInt(x.split("=")[1]));
+// const queryCount = queryString.split("&").map((x) => parseInt(x.split("=")[1]));
+// console.log(query);
+const queries = getQueries();
 
-const offset = query[0];
-const count = query[1];
-console.log(offset, count);
-if (queryString == "") {
-  const siteHTML = buildSiteLayout();
+const offset = (queries.offset);
+const count = (queries.count);
+const cards = animals.slice(offset, offset + count);
+
+if (count === undefined) {
+  // let animals = animals[count - 1];
+  const siteHTML = error("Please query a count.");
+  document.write(siteHTML);
+} else if (parseInt(offset) + parseInt(count) - 1 >= animals.length) {
+  const siteHTML = error("Offset and count out of bounds");
   document.write(siteHTML);
 }
 else if (offset < 0) {
   // let animals = animals[count - 1];
   const siteHTML = error("Offset cannot be negative");
+  document.write(siteHTML);
+}
+else if (offset === undefined) {
+  // let animals = animals[count - 1];
+  const siteHTML = error("Please query a offset.");
+  document.write(siteHTML);
+}
+else {
+  const offset = parseInt(queries.offset);
+  const count = parseInt(queries.count);
+  const cards = animals.slice(offset, offset + count);
+  const siteHTML = buildSiteLayout(cards);
   document.write(siteHTML);
 }
