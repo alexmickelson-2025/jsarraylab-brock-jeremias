@@ -69,22 +69,29 @@ const buildSiteLayout = () => {
   return `${header}${body}${footer}`;
 };
 
-// const buildSiteLayout = () => {
-//   let output = "";
-//   animals.forEach((entry) => {
-//     output += buildAnimalCard(entry);
-//   });
-//   return output;
-// };
 
-queryString = window.location.search
+const error = (message) => {
+  const header = buildHeader();
+  const body = buildMain();
+  const footer = buildFooter();
+  return `${header}<section class="main-container"><main>${message}</main></section>${footer}`;
+};
 
+const queryString = window.location.search;
+// const query = queryString.split("&")[0].split("=")[1]
+const query = queryString.split("&").map((x) => parseInt(x.split("=")[1]));
+const queryCount = queryString.split("&").map((x) => parseInt(x.split("=")[1]));
+console.log(query);
 
-
+const offset = query[0];
+const count = query[1];
+console.log(offset, count);
 if (queryString == "") {
-  console.log("test");
-} else {
-  console.log(queryString.split("&")[0].split("=")[1]);
   const siteHTML = buildSiteLayout();
+  document.write(siteHTML);
+}
+else if (offset < 0) {
+  // let animals = animals[count - 1];
+  const siteHTML = error("Offset cannot be negative");
   document.write(siteHTML);
 }
